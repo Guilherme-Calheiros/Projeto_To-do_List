@@ -1,8 +1,11 @@
+import RoutesApp from "./routes/RoutesApp"
+import { AuthProvider } from "./contexts/AuthContext"
+
 function App() {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+      <AuthProvider>
+        <RoutesApp />
+      </AuthProvider>
   )
 }
 
