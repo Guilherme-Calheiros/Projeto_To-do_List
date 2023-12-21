@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Button from "../button";
-import Input from "../input";
-import Image from "../Image";
-import CardAcesso from "../CardAcesso";
+import Button from "../Button.jsx";
+import Input from "../Input.jsx"
+import Image from "../Image.jsx";
+import CardAcesso from "../CardAcesso.jsx";
 import LogoMobile from "../../assets/Logo.png";
 import LogoDesktop from "../../assets/Logo_desktop.png";
 import Checklist_boy from '../../assets/Checklist_boy.png';
