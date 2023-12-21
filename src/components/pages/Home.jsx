@@ -1,4 +1,4 @@
-import Button from "../button";
+import Button from "../Button.jsx";
 import { useNavigate } from "react-router-dom";
 import UseAuthContext from "../../hooks/UseAuthContext";
 
