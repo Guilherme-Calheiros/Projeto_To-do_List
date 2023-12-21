@@ -1,13 +1,17 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from "../components/pages/Home";
 import Signup from "../components/pages/Signup";
 import Signin from "../components/pages/Signin";
-import UseAuthContext from "../hooks/UseAuthContext";
+import PocketBase from 'pocketbase';
 
-const Private = ({ Item }) => {
-    const { signed } = UseAuthContext();
 
-    return signed > 0 ? <Item /> : <Signin />;
+const PrivateRoute = ({ element: Element }) => {
+    const pb = new PocketBase('http://127.0.0.1:8090');
+    if(pb.authStore.isValid){
+        return <Element />
+    } else {
+        return <Navigate to="/"/>;
+    }
 }
 
 const RoutesApp = () => {
@@ -15,7 +19,7 @@ const RoutesApp = () => {
         <Router>
             <>
                 <Routes>
-                    <Route exact path="/home" element={<Private Item={Home}/> } />
+                    <Route exact path="/home" element={<PrivateRoute element={Home}/> } />
                     <Route path="/" element={<Signin />} />
                     <Route exact path="/signup" element={<Signup />} />
                     <Route exact path="*" element={<Signin />} />

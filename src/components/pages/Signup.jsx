@@ -28,14 +28,15 @@ const Cadastro = () => {
             return
         }
 
-        const res = signup(email, senha)
+        const res = signup(email, senha, senhaConf)
+        console.log(res)
 
-        if (res){
-            setError(res)
-            return
-        }
+        // if (res){
+        //     setError(res)
+        //     return
+        // }
 
-        alert("Usuário cadastrado com sucesso")
+        // alert("Usuário cadastrado com sucesso")
         navigate("/")
     }
 

@@ -23,14 +23,15 @@ const Login = () => {
             return
         }
 
-        const res = signin(email, senha)
+        signin(email, senha).then((res) => {
+            if (res.token) {
+                navigate("/home")
+            }
+            console.log(res)
+            console.log(res.token)
+        })
 
-        if (res){
-            setError(res)
-            return
-        }
-
-        navigate("/home")
+        
     }
 
     return (

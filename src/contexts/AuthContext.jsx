@@ -1,67 +1,98 @@
+import PocketBase from 'pocketbase';
 import { createContext , useEffect, useState} from "react";
 
 export const AuthContext = createContext({});
+
+const pb = new PocketBase('http://127.0.0.1:8090');
 
 export const AuthProvider = ({ children }) => {
     const [user , setUser] = useState();
 
     useEffect(() => {
-        const userToken = localStorage.getItem('user_token');
-        const usersStorage = localStorage.getItem('user_db');
+        const userAuthData = JSON.parse(localStorage.getItem('authData'));
+        
+        console.log(userAuthData)
+        console.log(pb.authStore)
 
-        if (userToken && usersStorage){
-            const hasUser = JSON.parse(usersStorage)?.filter(
-                (user) => user.email === JSON.parse(userToken).email
-            );
+        setUser(userAuthData)
 
-            if (hasUser) setUser(hasUser[0]);
-        }
+        // const userToken = localStorage.getItem('user_token');
+        // const usersStorage = localStorage.getItem('user_db');
+
+        // if (userToken && usersStorage){
+        //     const hasUser = JSON.parse(usersStorage)?.filter(
+        //         (user) => user.email === JSON.parse(userToken).email
+        //     );
+
+        //     if (hasUser) setUser(hasUser[0]);
+        // }
     }, []);
 
-    const signin = (email, password) => {
-        const usersStorage = JSON.parse(localStorage.getItem('user_db'));
+    const signin = async (email, password) => {
+        
+        const authData = await pb.collection('users').authWithPassword(
+            email,
+            password,
+        );
+        localStorage.setItem('authData', JSON.stringify(authData));
+        return authData
 
-        const hasUser = usersStorage?.filter((user) => user.email === email);
+        // const usersStorage = JSON.parse(localStorage.getItem('user_db'));
 
-        if(hasUser?.length) {
-            if(hasUser[0].email === email && hasUser[0].password === password) {
-                const token = Math.random().toString(36).substring(2);
-                localStorage.setItem('user_token', JSON.stringify({ email, token }));
-                setUser( {email, password })
-                return
-            } else {
-                return "E-mail ou senha incorretos"
-            }
-        } else {
-            return "Usuário não cadastrado"
-        }
+        // const hasUser = usersStorage?.filter((user) => user.email === email);
+
+        // if(hasUser?.length) {
+        //     if(hasUser[0].email === email && hasUser[0].password === password) {
+        //         const token = Math.random().toString(36).substring(2);
+        //         localStorage.setItem('user_token', JSON.stringify({ email, token }));
+        //         setUser( {email, password })
+        //         return
+        //     } else {
+        //         return "E-mail ou senha incorretos"
+        //     }
+        // } else {
+        //     return "Usuário não cadastrado"
+        // }
     }
 
-    const signup = (email, password) => {
-        const usersStorage = JSON.parse(localStorage.getItem('user_db'));
+    const signup = async (email, password, senhaConf) => {
+        // example create data
+        const data = {
+            "email": email,
+            "emailVisibility": true,
+            "password": password,
+            "passwordConfirm": senhaConf,
+        };
 
-        const hasUser = usersStorage?.filter((user) => user.email === email);
+        const record = await pb.collection('users').create(data);
+        return record ? true : false;
 
-        if (hasUser?.length){
-            return "Já existe uma conta com este E-mail"
-        }
+        // const usersStorage = JSON.parse(localStorage.getItem('user_db'));
 
-        let newUser;
+        // const hasUser = usersStorage?.filter((user) => user.email === email);
 
-        if (usersStorage) {
-            newUser = [...usersStorage, { email, password }];
-        } else {
-            newUser = [{ email, password }];
-        }
+        // if (hasUser?.length){
+        //     return "Já existe uma conta com este E-mail"
+        // }
 
-        localStorage.setItem('user_db', JSON.stringify(newUser));
+        // let newUser;
 
-        return;
+        // if (usersStorage) {
+        //     newUser = [...usersStorage, { email, password }];
+        // } else {
+        //     newUser = [{ email, password }];
+        // }
+
+        // localStorage.setItem('user_db', JSON.stringify(newUser));
+
+        // return;
     };
 
     const signout = () => {
-        setUser(null)
-        localStorage.removeItem('user_token')
+        pb.authStore.clear()
+        // setUser(null)
+        localStorage.removeItem('authData')
+
     };
 
     return (
