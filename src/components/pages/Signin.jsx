@@ -1,13 +1,13 @@
 import { useState } from "react";
-import Input from "../input"
-import Button from "../button"
-import Image from "../Image";
-import CardAcesso from "../CardAcesso";
-import LogoMobile from "../../assets/Logo.png";
-import LogoDesktop from "../../assets/Logo_desktop.png";
-import Checklist_boy from '../../assets/Checklist_boy.png';
+import Button from "./src/components/button";
+import Input from "./src/components/input";
+import Image from "./src/components/Image";
+import CardAcesso from "./src/components/CardAcesso";
+import LogoMobile from "./src/assets/Logo.png";
+import LogoDesktop from "./src/assets/Logo_desktop.png";
+import Checklist_boy from './src/assets/Checklist_boy.png';
 import { Link, useNavigate } from "react-router-dom";
-import UseAuthContext from "../../hooks/UseAuthContext";
+import UseAuthContext from "./src/hooks/UseAuthContext";
 
 const Login = () => {
     const { signin } = UseAuthContext();
@@ -40,7 +40,7 @@ const Login = () => {
                     <Image src={LogoDesktop} alt="Logo"/>
                 </div>
                 <div className="hidden sm:block">
-                    <Image src={Checklist_boy} h="624px"/>
+                    <Image src={Checklist_boy} alt="Trabalho de ilustração feito por Storyset" h="624px"/>
                 </div>
             </div>
             <div className="bg-primary-300 h-screen p-2 w-full lg:w-2/4 ml-auto flex flex-col justify-center items-center">
