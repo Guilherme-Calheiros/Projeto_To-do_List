@@ -2,8 +2,9 @@ import PocketBase from 'pocketbase';
 import { createContext , useEffect, useState} from "react";
 
 export const AuthContext = createContext({});
+const url ='https://to-do.pockethost.io/'
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase(url);
 
 export const AuthProvider = ({ children }) => {
     const [user , setUser] = useState();
