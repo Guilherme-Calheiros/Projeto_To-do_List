@@ -11,10 +11,6 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const userAuthData = JSON.parse(localStorage.getItem('authData'));
-        
-        console.log(userAuthData)
-        console.log(pb.authStore)
-
         setUser(userAuthData)
 
         // const userToken = localStorage.getItem('user_token');
@@ -31,12 +27,18 @@ export const AuthProvider = ({ children }) => {
 
     const signin = async (email, password) => {
         
+        try {
         const authData = await pb.collection('users').authWithPassword(
             email,
             password,
         );
         localStorage.setItem('authData', JSON.stringify(authData));
         return authData
+        } catch (error) {
+            console.error("Erro durante a autenticação:", error);
+            return "Erro ao fazer Login";
+        }
+
 
         // const usersStorage = JSON.parse(localStorage.getItem('user_db'));
 

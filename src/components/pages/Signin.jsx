@@ -26,9 +26,9 @@ const Login = () => {
         signin(email, senha).then((res) => {
             if (res.token) {
                 navigate("/home")
+            } else {
+                setError(res)
             }
-            console.log(res)
-            console.log(res.token)
         })
 
         
