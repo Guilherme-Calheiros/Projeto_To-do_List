@@ -28,12 +28,12 @@ export const AuthProvider = ({ children }) => {
     const signin = async (email, password) => {
         
         try {
-        const authData = await pb.collection('users').authWithPassword(
-            email,
-            password,
-        );
-        localStorage.setItem('authData', JSON.stringify(authData));
-        return authData
+            const authData = await pb.collection('users').authWithPassword(
+                email,
+                password,
+            );
+            localStorage.setItem('authData', JSON.stringify(authData));
+            return authData
         } catch (error) {
             console.error("Erro durante a autenticação:", error);
             return "Erro ao fazer Login";
@@ -58,17 +58,27 @@ export const AuthProvider = ({ children }) => {
         // }
     }
 
-    const signup = async (email, password, senhaConf) => {
+    const signup = async (email, password, senhaConf, uuid) => {
         // example create data
-        const data = {
+        const dataUser = {
+            "id": uuid,
             "email": email,
             "emailVisibility": true,
             "password": password,
             "passwordConfirm": senhaConf,
         };
+        const recordUser = await pb.collection('users').create(dataUser);
+        
+        const recordTable = await pb.collection('table').getOne('defaltTableJson');
+        const dataTable = recordTable.list
 
-        const record = await pb.collection('users').create(data);
-        return record ? true : false;
+        const newDataTable = {
+            "id": uuid,
+            "list": dataTable
+        }
+        const newRecordTable = await pb.collection('table').create(newDataTable);
+
+        return recordUser && newRecordTable ? true : false;
 
         // const usersStorage = JSON.parse(localStorage.getItem('user_db'));
 
