@@ -1,4 +1,4 @@
-import { useState , useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import SignoutButton from '../SignoutButton.jsx'
 import { DragDropContext, Draggable } from 'react-beautiful-dnd'
 import StrictModeDroppable from '../react-beatiful-dnd/StrictModeDroppable.jsx'
@@ -9,7 +9,7 @@ const pb = new PocketBase('https://to-do.pockethost.io');
 function Home() {
 
     const [columns, setColumns] = useState([])
-    const [itemEditStates, setItemEditStates] = useState({});
+    const [objectEditStates, setIObjectEditStates] = useState({});
     const [newText, setNewText] = useState()
 
     useEffect(() => {
@@ -17,7 +17,7 @@ function Home() {
             const authDataString = localStorage.getItem('authData')
             const authData = JSON.parse(authDataString)
             const userId = authData.record.id
-            
+
             try {
                 const record = await pb.collection('table').getOne(userId);
                 const data = record.list
@@ -28,6 +28,28 @@ function Home() {
         }
         pbData()
     }, [])
+
+    useEffect(() => {
+        const update = async () => {
+            const authDataString = localStorage.getItem('authData')
+            const authData = JSON.parse(authDataString)
+            const userId = authData.record.id
+            
+            try {
+                const jsonTable = JSON.stringify(columns)
+                const data = {
+                    "list": jsonTable
+                };
+        
+                const record = await pb.collection('table').update(userId, data);
+                
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        update()
+
+    }, [columns])
 
     const onDragEnd = (result) => {
         let draggedItem = {}
@@ -74,7 +96,7 @@ function Home() {
         const maxId = Math.max(...columns.map(column => parseInt(column.id, 10)), 0);
         const newColumnId = (maxId + 1).toString().padStart(2, '0');
         const newColumn = { name: `Nova coluna ${newColumnId}`, id: newColumnId, items: [] };
-        handleShowColumnDiv(newColumn.id)
+        handleShowDiv(newColumn.id)
 
         setColumns([...columns, newColumn]);
     };
@@ -90,7 +112,7 @@ function Home() {
         const newItem = { id: newItemId.toString(), content: `Novo item ${newItemId}` }
 
         columns[index].items.push(newItem)
-        handleShowItemDiv(newItem.id)
+        handleShowDiv(newItem.id)
 
         setColumns([...columns])
     }
@@ -107,17 +129,10 @@ function Home() {
         setColumns(updatedColumn)
     }
 
-    const handleShowItemDiv = (itemId) => {
-        setItemEditStates((prevStates) => ({
+    const handleShowDiv = (id) => {
+        setIObjectEditStates((prevStates) => ({
             ...prevStates,
-            [itemId]: !prevStates[itemId],
-        }));
-    };
-
-    const handleShowColumnDiv = (columnId) => {
-        setItemEditStates((prevStates) => ({
-            ...prevStates,
-            [columnId]: !prevStates[columnId],
+            [id]: !prevStates[id],
         }));
     };
 
@@ -138,7 +153,7 @@ function Home() {
 
         setColumns(updatedColumn)
         setNewText()
-        handleShowItemDiv(itemId)
+        handleShowDiv(itemId)
     }
 
     const saveNewNameColumn = (columnId) => {
@@ -151,7 +166,7 @@ function Home() {
             return [...prevColumns]
         })
         setNewText()
-        handleShowColumnDiv(columnId)
+        handleShowDiv(columnId)
     }
 
     return (
@@ -164,13 +179,13 @@ function Home() {
                             <StrictModeDroppable droppableId={column.id} key={column.id}>
                                 {(provided) => (
                                     <div style={{ backgroundColor: "white", width: 320, height: 'fit-content', borderRadius: 5, display: 'flex', flexDirection: 'column', padding: 5 }}>
-                                        {!itemEditStates[column.id] && (
-                                            <h2 style={{ color: 'black', cursor: 'pointer', userSelect: 'none' }} onDoubleClick={() => handleShowColumnDiv(column.id)}>{column.name}</h2>
+                                        {!objectEditStates[column.id] && (
+                                            <h2 style={{ color: 'black', cursor: 'pointer', userSelect: 'none' }} onDoubleClick={() => handleShowDiv(column.id)}>{column.name}</h2>
                                         )}
-                                        {itemEditStates[column.id] && (
+                                        {objectEditStates[column.id] && (
                                             <div>
                                                 <input style={{ padding: 5 }} type="text" onChange={handleText} />
-                                                <button style={{ backgroundColor: 'red' }} onClick={() => handleShowColumnDiv(column.id)}>Fechar</button>
+                                                <button style={{ backgroundColor: 'red' }} onClick={() => handleShowDiv(column.id)}>Fechar</button>
                                                 <button onClick={() => saveNewNameColumn(column.id)}>Salvar</button>
                                             </div>
                                         )}
@@ -180,20 +195,20 @@ function Home() {
                                                     {(provided) => (
                                                         <div style={{ backgroundColor: 'gray' }}>
                                                             <div {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef} style={{ backgroundColor: 'gray', height: 'auto', display: 'flex', flexDirection: 'column', gap: 10, padding: 15, ...provided.draggableProps.style }}>
-                                                                {!itemEditStates[item.id] && (
+                                                                {!objectEditStates[item.id] && (
                                                                     <p style={{ userSelect: 'none' }}>{item.content}</p>
                                                                 )}
                                                                 <div style={{ display: 'flex', gap: 5, fontSize: 14, justifyContent: 'center', alignItems: 'center' }}>
-                                                                    {!itemEditStates[item.id] && (
+                                                                    {!objectEditStates[item.id] && (
                                                                         <>
                                                                             <button style={{ backgroundColor: 'blueviolet' }} onClick={() => removeItem(column.id, item.id)}>Remover tarefa</button>
-                                                                            <button style={{ backgroundColor: 'blueviolet' }} onClick={() => handleShowItemDiv(item.id)}>Editar nome</button>
+                                                                            <button style={{ backgroundColor: 'blueviolet' }} onClick={() => handleShowDiv(item.id)}>Editar nome</button>
                                                                         </>
                                                                     )}
-                                                                    {itemEditStates[item.id] && (
+                                                                    {objectEditStates[item.id] && (
                                                                         <div>
                                                                             <input type="text" onChange={handleText} />
-                                                                            <button style={{ backgroundColor: 'red' }} onClick={() => handleShowItemDiv(item.id)}>Fechar</button>
+                                                                            <button style={{ backgroundColor: 'red' }} onClick={() => handleShowDiv(item.id)}>Fechar</button>
                                                                             <button onClick={() => saveNewNameItem(column.id, item.id)}>Salvar</button>
                                                                         </div>
                                                                     )}
