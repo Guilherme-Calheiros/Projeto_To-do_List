@@ -8,6 +8,7 @@ import LogoDesktop from "../../assets/Logo_desktop.png";
 import Checklist_boy from '../../assets/Checklist_boy.png';
 import { Link, useNavigate } from "react-router-dom";
 import UseAuthContext from "../../hooks/UseAuthContext";
+import { v4 as uuidv4 } from "uuid"
 
 const Cadastro = () => {
 
@@ -19,6 +20,10 @@ const Cadastro = () => {
     const { signup } = UseAuthContext();
     const navigate = useNavigate();
 
+    function generateUuid() {
+        return uuidv4().replace(/-/g, "").substring(0, 15);
+    }
+
     const handleCadastro = () => {
         if (!email || !senha || !senhaConf) {
             setError("Preencha todos os campos")
@@ -28,8 +33,8 @@ const Cadastro = () => {
             return
         }
 
-        const res = signup(email, senha, senhaConf)
-        console.log(res)
+        const uuid = generateUuid()
+        const res = signup(email, senha, senhaConf, String(uuid))
 
         // if (res){
         //     setError(res)
