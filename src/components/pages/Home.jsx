@@ -19,11 +19,11 @@ function Home() {
             const userId = authData.record.id
 
             try {
-                const record = await pb.collection('table').getOne(userId);
-                const data = record.list
+                const record = await pb.collection('users').getOne(userId);
+                const data = record.tasks
                 setColumns(data)
             } catch (error) {
-                console.log(error)
+                console.error(error)
             }
         }
         pbData()
@@ -38,13 +38,13 @@ function Home() {
             try {
                 const jsonTable = JSON.stringify(columns)
                 const data = {
-                    "list": jsonTable
+                    "tasks": jsonTable
                 };
         
-                const record = await pb.collection('table').update(userId, data);
+                const record = await pb.collection('users').update(userId, data);
                 
             } catch (error) {
-                console.log(error)
+                console.error(error)
             }
         }
         update()

@@ -57,8 +57,10 @@ export const AuthProvider = ({ children }) => {
         //     return "Usuário não cadastrado"
         // }
     }
-
+    
     const signup = async (email, password, senhaConf, uuid) => {
+        const recordTable = await pb.collection('users').getOne('defalt-users-id');
+        const dataTable = recordTable.tasks
         // example create data
         const dataUser = {
             "id": uuid,
@@ -66,19 +68,10 @@ export const AuthProvider = ({ children }) => {
             "emailVisibility": true,
             "password": password,
             "passwordConfirm": senhaConf,
+            "tasks": dataTable,
         };
-        const recordUser = await pb.collection('users').create(dataUser);
-        
-        const recordTable = await pb.collection('table').getOne('defaltTableJson');
-        const dataTable = recordTable.list
-
-        const newDataTable = {
-            "id": uuid,
-            "list": dataTable
-        }
-        const newRecordTable = await pb.collection('table').create(newDataTable);
-
-        return recordUser && newRecordTable ? true : false;
+        const recordUser = await pb.collection('users').create(dataUser)
+        return recordUser ? true : false;
 
         // const usersStorage = JSON.parse(localStorage.getItem('user_db'));
 
