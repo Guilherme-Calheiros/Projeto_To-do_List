@@ -4,7 +4,7 @@ import { createContext , useEffect, useState} from "react";
 export const AuthContext = createContext({});
 const url ='https://to-do.pockethost.io/'
 
-const pb = new PocketBase(url);
+const pb = new PocketBase(url).autoCancellation(false);
 
 export const AuthProvider = ({ children }) => {
     const [user , setUser] = useState();

@@ -4,7 +4,7 @@ import { DragDropContext, Draggable } from 'react-beautiful-dnd'
 import StrictModeDroppable from '../react-beatiful-dnd/StrictModeDroppable.jsx'
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('https://to-do.pockethost.io');
+const pb = new PocketBase('https://to-do.pockethost.io').autoCancellation(false);
 
 function Home() {
 
