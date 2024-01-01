@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import SignoutButton from '../SignoutButton.jsx'
 import { DragDropContext, Draggable } from 'react-beautiful-dnd'
-import StrictModeDroppable from '../react-beatiful-dnd/StrictModeDroppable.jsx'
+import Column from '../react-beatiful-dnd/Column.jsx';
 import PocketBase from 'pocketbase';
 
 const pb = new PocketBase('https://to-do.pockethost.io').autoCancellation(false);
@@ -9,7 +9,7 @@ const pb = new PocketBase('https://to-do.pockethost.io').autoCancellation(false)
 function Home() {
 
     const [columns, setColumns] = useState([])
-    const [objectEditStates, setIObjectEditStates] = useState({});
+    const [editStates, setEditStates] = useState({});
     const [newText, setNewText] = useState()
 
     useEffect(() => {
@@ -34,15 +34,15 @@ function Home() {
             const authDataString = localStorage.getItem('authData')
             const authData = JSON.parse(authDataString)
             const userId = authData.record.id
-            
+
             try {
                 const jsonTable = JSON.stringify(columns)
                 const data = {
                     "tasks": jsonTable
                 };
-        
+
                 const record = await pb.collection('users').update(userId, data);
-                
+
             } catch (error) {
                 console.error(error)
             }
@@ -52,44 +52,33 @@ function Home() {
     }, [columns])
 
     const onDragEnd = (result) => {
-        let draggedItem = {}
-        let sourceColumnItems = []
-        let destinationColumnItems = []
-        let sourceColumnId = 0
-        let destinationColumnId = 0
+        const { source, destination, draggableId } = result
 
-        for (let i in columns) {
-            if (result.source.droppableId == columns[i].id) {
-                sourceColumnItems = columns[i].items
-                sourceColumnId = i
-            } else if (result.destination.droppableId == columns[i].id) {
-                destinationColumnItems = columns[i].items
-                destinationColumnId = i
-            }
-        }
+        const sourceColumn = columns.find((column) => column.id === source.droppableId)
+        const destinationColumn = columns.find((column) => column.id === destination.droppableId)
+        const draggedItem = sourceColumn.items.find((item) => item.id === draggableId)
 
-        for (let i in sourceColumnItems) {
-            if (sourceColumnItems[i].id == result.draggableId) {
-                draggedItem = sourceColumnItems[i]
-            }
-        }
+        const filteredSourceColumnItems = sourceColumn.items.filter((item) => item.id !== draggableId)
 
-        let filteredSourceColumnItems = sourceColumnItems.filter((item) => item.id != result.draggableId)
-
-        if (result.source.droppableId == result.destination.droppableId) {
-            filteredSourceColumnItems.splice(result.destination.index, 0, draggedItem)
-
-            let columnsCopy = JSON.parse(JSON.stringify(columns))
-            columnsCopy[sourceColumnId].items = filteredSourceColumnItems
-            setColumns(columnsCopy)
+        if (source.droppableId === destination.droppableId) {
+            filteredSourceColumnItems.splice(destination.index, 0, draggedItem);
+            setColumns((prevColumns) => {
+                const columnsCopy = [...prevColumns]
+                columnsCopy.find((column) => column.id === source.droppableId).items = filteredSourceColumnItems;
+                return columnsCopy;
+            })
         } else {
-            destinationColumnItems.splice(result.destination.index, 0, draggedItem)
+            const destinationItems = [...destinationColumn.items];
+            destinationItems.splice(destination.index, 0, draggedItem);
 
-            let columnsCopy = JSON.parse(JSON.stringify(columns))
-            columnsCopy[sourceColumnId].items = filteredSourceColumnItems
-            columnsCopy[destinationColumnId].items = destinationColumnItems
-            setColumns(columnsCopy)
+            setColumns((prevColumns) => {
+                const columnsCopy = [...prevColumns];
+                columnsCopy.find((column) => column.id === source.droppableId).items = filteredSourceColumnItems;
+                columnsCopy.find((column) => column.id === destination.droppableId).items = destinationItems;
+                return columnsCopy;
+            });
         }
+
     }
 
     const addColumn = () => {
@@ -130,7 +119,7 @@ function Home() {
     }
 
     const handleShowDiv = (id) => {
-        setIObjectEditStates((prevStates) => ({
+        setEditStates((prevStates) => ({
             ...prevStates,
             [id]: !prevStates[id],
         }));
@@ -175,60 +164,19 @@ function Home() {
             <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {columns.map((column, index) => (
-                        <div key={column.id} style={{ display: 'flex', flexDirection: 'column' }}>
-                            <StrictModeDroppable droppableId={column.id} key={column.id}>
-                                {(provided) => (
-                                    <div style={{ backgroundColor: "white", width: 320, height: 'fit-content', borderRadius: 5, display: 'flex', flexDirection: 'column', padding: 5 }}>
-                                        {!objectEditStates[column.id] && (
-                                            <h2 style={{ color: 'black', cursor: 'pointer', userSelect: 'none' }} onDoubleClick={() => handleShowDiv(column.id)}>{column.name}</h2>
-                                        )}
-                                        {objectEditStates[column.id] && (
-                                            <div>
-                                                <input style={{ padding: 5 }} type="text" onChange={handleText} />
-                                                <button style={{ backgroundColor: 'red' }} onClick={() => handleShowDiv(column.id)}>Fechar</button>
-                                                <button onClick={() => saveNewNameColumn(column.id)}>Salvar</button>
-                                            </div>
-                                        )}
-                                        <div ref={provided.innerRef} style={{ display: 'flex', flexDirection: 'column', padding: 15, gap: 15 }}>
-                                            {column.items.map((item, index) => (
-                                                <Draggable draggableId={item.id} index={index} key={item.id}>
-                                                    {(provided) => (
-                                                        <div style={{ backgroundColor: 'gray' }}>
-                                                            <div {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef} style={{ backgroundColor: 'gray', height: 'auto', display: 'flex', flexDirection: 'column', gap: 10, padding: 15, ...provided.draggableProps.style }}>
-                                                                {!objectEditStates[item.id] && (
-                                                                    <p style={{ userSelect: 'none' }}>{item.content}</p>
-                                                                )}
-                                                                <div style={{ display: 'flex', gap: 5, fontSize: 14, justifyContent: 'center', alignItems: 'center' }}>
-                                                                    {!objectEditStates[item.id] && (
-                                                                        <>
-                                                                            <button style={{ backgroundColor: 'blueviolet' }} onClick={() => removeItem(column.id, item.id)}>Remover tarefa</button>
-                                                                            <button style={{ backgroundColor: 'blueviolet' }} onClick={() => handleShowDiv(item.id)}>Editar nome</button>
-                                                                        </>
-                                                                    )}
-                                                                    {objectEditStates[item.id] && (
-                                                                        <div>
-                                                                            <input type="text" onChange={handleText} />
-                                                                            <button style={{ backgroundColor: 'red' }} onClick={() => handleShowDiv(item.id)}>Fechar</button>
-                                                                            <button onClick={() => saveNewNameItem(column.id, item.id)}>Salvar</button>
-                                                                        </div>
-                                                                    )}
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </Draggable>
-                                            ))}
-                                        </div>
-                                        {provided.placeholder}
-                                        <div style={{ display: 'flex', gap: 5, fontSize: 14, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                                            <button onClick={() => addItem(index)}>Adicionar tarefa</button>
-                                            <button onClick={() => removeColumn(column.id)}>Excluir</button>
-                                        </div>
-                                    </div>
-                                )}
-                            </StrictModeDroppable>
-                        </div>
+                        <Column
+                            key={column.id}
+                            column={column}
+                            editStates={editStates}
+                            handleShowDiv={handleShowDiv}
+                            handleText={handleText}
+                            saveNewNameColumn={saveNewNameColumn}
+                            removeColumn={removeColumn}
+                            addItem={addItem}
+                            removeItem={removeItem}
+                            saveNewNameItem={saveNewNameItem}
+                            index={index}
+                        />
                     ))}
                 </DragDropContext>
                 <button onClick={addColumn}>Adicionar Coluna</button>
