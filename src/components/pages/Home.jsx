@@ -89,7 +89,7 @@ function Home() {
     const addColumn = () => {
         const maxId = Math.max(...columns.map(column => parseInt(column.id, 10)), 0);
         const newColumnId = (maxId + 1).toString().padStart(2, '0');
-        const newColumn = { name: `Nova coluna ${newColumnId}`, id: newColumnId, items: [] };
+        const newColumn = { name: `Nova lista ${newColumnId}`, id: newColumnId, items: [] };
         handleShowDiv(newColumn.id)
 
         setColumns([...columns, newColumn]);
@@ -103,10 +103,9 @@ function Home() {
     const addItem = (index) => {
         const allItems = columns.reduce((acc, column) => [...acc, ...column.items], []);
         const newItemId = (allItems.length > 0 ? Math.max(...allItems.map(item => parseInt(item.id))) : 0) + 1;
-        const newItem = { id: newItemId.toString(), content: `Novo item ${newItemId}` }
+        const newItem = { id: newItemId.toString(), content: `Nova tarefa ${newItemId}` }
 
         columns[index].items.push(newItem)
-        handleShowDiv(newItem.id)
 
         setColumns([...columns])
     }
@@ -139,7 +138,11 @@ function Home() {
             if (column.id === columnId) {
                 const editItem = column.items.find(item => item.id === itemId)
                 if (editItem) {
-                    editItem.content = newText
+                    if(!newText){
+                        editItem.content = editItem.content
+                    } else {
+                        editItem.content = newText
+                    }
                 }
             }
             return column
@@ -154,7 +157,11 @@ function Home() {
         setColumns((prevColumns) => {
             const editColumn = prevColumns.find(column => column.id === columnId)
             if (editColumn) {
-                editColumn.name = newText
+                if (!newText) {
+                    editColumn.name = editColumn.name
+                } else {
+                    editColumn.name = newText
+                }
             }
 
             return [...prevColumns]
@@ -164,9 +171,9 @@ function Home() {
     }
 
     return (
-        <>
-            <Header username={username} key={userId}/>
-            <div className='flex gap-5 flex-wrap flex-col items-center lg:flex-row lg:items-start px-3 mt-6'>
+        <div className=' bg-[#fafafa] h-screen font-inter'>
+            <Header username={username} key={userId} />
+            <div className='flex gap-5 flex-wrap flex-col items-center lg:flex-row lg:items-start px-10 pt-6'>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {columns.map((column, index) => (
                         <Column
@@ -184,9 +191,14 @@ function Home() {
                         />
                     ))}
                 </DragDropContext>
-                <button onClick={addColumn}>Adicionar Coluna</button>
+                <button className="flex items-center translate-y-1/2" onClick={addColumn}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.99799H13V10.998H19V12.998Z" fill="#8F8F8F" />
+                    </svg>
+                    <p className="text-base text-[#8F8F8F]">Adicionar lista</p>
+                </button>
             </div>
-        </>
+        </div>
     )
 }
 

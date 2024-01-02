@@ -14,6 +14,9 @@ export default {
           400: "#005CB9",
         },
       },
+      fontFamily:{
+        'inter': ['Inter' , 'sans-serif']
+      }
     },
   },
   plugins: [],

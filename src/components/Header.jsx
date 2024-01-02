@@ -14,7 +14,7 @@ const Header = ({username}) => {
             <button className=" hidden space-y-1 group md:block">
                 <p className="text-white text-xl font-bold">{username}</p>
 
-                <ul className="bg-white w-1/3 pb-10 absolute -top-full group-focus:top-1 right-1 duration-150 flex flex-col space-y-3 justify-end items-center rounded border-black shadow-lg">
+                <ul className="bg-white w-1/3 pb-10 absolute -top-full group-focus:top-1 right-1 duration-150 flex flex-col space-y-3 justify-end items-center rounded border-black shadow-lg z-10">
                     <button className="px-10 py-8 relative ml-auto">
                         <div className="w-6 h-1 rotate-45 absolute bg-black"></div>
                         <div className="w-6 h-1 -rotate-45 absolute bg-black"></div>
@@ -28,7 +28,7 @@ const Header = ({username}) => {
                 <div className="w-6 h-1 bg-white"></div>
                 <div className="w-6 h-1 bg-white"></div>
 
-                <ul className="bg-white w-screen pb-10 absolute -top-full group-focus:-top-1 right-0 duration-150 flex flex-col space-y-3 justify-end items-center shadow-lg">
+                <ul className="bg-white w-screen pb-10 absolute -top-full group-focus:-top-1 right-0 duration-150 flex flex-col space-y-3 justify-end items-center shadow-lg z-10">
                     <button className="px-10 py-8 relative ml-auto">
                         <div className="w-6 h-1 rotate-45 absolute bg-black"></div>
                         <div className="w-6 h-1 -rotate-45 absolute bg-black"></div>
