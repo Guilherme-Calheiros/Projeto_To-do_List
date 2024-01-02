@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid"
 
 const Cadastro = () => {
 
+    const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
     const [senhaConf, setSenhaConf] = useState("")
@@ -25,7 +26,7 @@ const Cadastro = () => {
     }
 
     const handleCadastro = () => {
-        if (!email || !senha || !senhaConf) {
+        if (!username || !email || !senha || !senhaConf) {
             setError("Preencha todos os campos")
             return
         } else if (senha !== senhaConf){
@@ -34,7 +35,7 @@ const Cadastro = () => {
         }
 
         const uuid = generateUuid()
-        const res = signup(email, senha, senhaConf, String(uuid))
+        const res = signup(email, senha, senhaConf, String(uuid), username)
 
         // if (res){
         //     setError(res)
@@ -60,6 +61,12 @@ const Cadastro = () => {
                     <Image src={LogoMobile}/> 
                 </div>
                 <CardAcesso text="Cadastro">
+                    <Input 
+                        type="text"
+                        placeholder={"Digite seu nome de usuário"}
+                        value={username}
+                        onChange={(e) => [setUsername(e.target.value), setError("")]}
+                    />
                     <Input 
                         type="email"
                         placeholder={"Digite seu E-mail"}

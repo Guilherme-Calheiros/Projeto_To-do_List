@@ -11,17 +11,22 @@ function Home() {
     const [columns, setColumns] = useState([])
     const [editStates, setEditStates] = useState({});
     const [newText, setNewText] = useState()
+    const [username, setUsername] = useState()
+    const [userId, setUserId] = useState()
 
     useEffect(() => {
         const pbData = async () => {
             const authDataString = localStorage.getItem('authData')
             const authData = JSON.parse(authDataString)
             const userId = authData.record.id
+            const userName = authData.record.username
 
             try {
                 const record = await pb.collection('users').getOne(userId);
                 const data = record.tasks
                 setColumns(data)
+                setUsername(userName)
+                setUserId(userId)
             } catch (error) {
                 console.error(error)
             }

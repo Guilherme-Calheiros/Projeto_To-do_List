@@ -58,12 +58,13 @@ export const AuthProvider = ({ children }) => {
         // }
     }
     
-    const signup = async (email, password, senhaConf, uuid) => {
+    const signup = async (email, password, senhaConf, uuid, username) => {
         const recordTable = await pb.collection('users').getOne('defalt-users-id');
         const dataTable = recordTable.tasks
         // example create data
         const dataUser = {
             "id": uuid,
+            "username": username,
             "email": email,
             "emailVisibility": true,
             "password": password,
