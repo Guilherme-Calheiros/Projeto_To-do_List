@@ -8,7 +8,7 @@ const Column = ({ column, editStates, handleShowDiv, handleText, saveNewNameColu
         <div className="flex flex-col">
             <StrictModeDroppable droppableId={column.id} key={column.id}>
                 {(provided) => (
-                    <div className="bg-primary-100 w-80 h-fit rounded flex flex-col p-1">
+                    <div className="bg-primary-100 sm:w-80 h-fit rounded flex flex-col p-1 w-64">
                         {!editStates[column.id] && (
                             <h2 className="text-black cursor-pointer select-none" onDoubleClick={() => handleShowDiv(column.id)}>{column.name}</h2>
                         )}
@@ -16,7 +16,7 @@ const Column = ({ column, editStates, handleShowDiv, handleText, saveNewNameColu
                             <div>
                                 <Input type="text" onChange={handleText} placeholder={column.name} />
                                 <button className="bg-red-500 p-1 border-none" onClick={() => handleShowDiv(column.id)}>X</button>
-                                <Button onClick={() => saveNewNameColumn(column.id)} text="Entrar" />
+                                <Button onClick={() => saveNewNameColumn(column.id)} text="Salvar" />
                             </div>
                         )}
                         <div ref={provided.innerRef} className="flex flex-col p-4 gap-4">

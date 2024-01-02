@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import SignoutButton from '../SignoutButton.jsx'
-import { DragDropContext, Draggable } from 'react-beautiful-dnd'
+import { DragDropContext } from 'react-beautiful-dnd'
 import Column from '../react-beatiful-dnd/Column.jsx';
+import Header from '../Header.jsx';
 import PocketBase from 'pocketbase';
 
 const pb = new PocketBase('https://to-do.pockethost.io').autoCancellation(false);
@@ -165,8 +165,8 @@ function Home() {
 
     return (
         <>
-            <SignoutButton />
-            <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+            <Header username={username} key={userId}/>
+            <div className='flex gap-5 flex-wrap flex-col items-center lg:flex-row lg:items-start px-3 mt-6'>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {columns.map((column, index) => (
                         <Column

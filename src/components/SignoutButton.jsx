@@ -13,7 +13,7 @@ const SignoutButton = () => {
     }
 
     return (
-        <Button text="Sair" onClick={handleSignout} />
+        <Button text="Sair" onClick={handleSignout} w="100px"/>
     )
 };
 
