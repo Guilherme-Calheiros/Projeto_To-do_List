@@ -22,7 +22,7 @@ const Task = ({ item, editStates, handleShowDiv, handleText, saveNewNameItem, re
                                             </svg>
                                         </button>
                                     </div>
-                                    <div className="flex gap-2 items-center">
+                                    <div className="flex gap-2 items-center flex-col sm:flex-row">
                                         <Button text="Salvar" h="52px" onClick={() => saveNewNameItem(columnId, item.id)} />
                                         <Button text="Remover tarefa" h="52px" onClick={() => removeItem(columnId, item.id)} />
                                     </div>
