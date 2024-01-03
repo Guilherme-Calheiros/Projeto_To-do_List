@@ -102,8 +102,20 @@ export const AuthProvider = ({ children }) => {
 
     };
 
+    const deleteUser = async () => {
+        try {
+            const authDataString = localStorage.getItem('authData')
+            const authData = JSON.parse(authDataString)
+            const userId = authData.record.id
+
+            await pb.collection('users').delete(userId)
+        } catch (error) {
+            console.error("Erro durante a exclusão:", error)
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ user, signed: !!user, signin, signup, signout }}>
+        <AuthContext.Provider value={{ user, signed: !!user, signin, signup, signout, deleteUser }}>
             {children}
         </AuthContext.Provider>
     )
