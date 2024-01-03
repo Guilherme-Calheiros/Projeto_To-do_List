@@ -20,12 +20,13 @@ function Home() {
             const authData = JSON.parse(authDataString)
             const userId = authData.record.id
             const userName = authData.record.username
+            const usernameWhitSpace = userName.replace(/_/g, ' ')
 
             try {
                 const record = await pb.collection('users').getOne(userId);
                 const data = record.tasks
                 setColumns(data)
-                setUsername(userName)
+                setUsername(usernameWhitSpace)
                 setUserId(userId)
             } catch (error) {
                 console.error(error)

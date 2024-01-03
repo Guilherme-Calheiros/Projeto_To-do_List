@@ -61,10 +61,12 @@ export const AuthProvider = ({ children }) => {
     const signup = async (email, password, senhaConf, uuid, username) => {
         const recordTable = await pb.collection('users').getOne('defalt-users-id');
         const dataTable = recordTable.tasks
+        const usernameWithoutSpace = username.replace(/\s/g, '_')
+        console.log(usernameWithoutSpace)
         // example create data
         const dataUser = {
             "id": uuid,
-            "username": username,
+            "username": usernameWithoutSpace,
             "email": email,
             "emailVisibility": true,
             "password": password,
