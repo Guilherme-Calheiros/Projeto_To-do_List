@@ -104,7 +104,12 @@ function Home() {
     const addItem = (index) => {
         const allItems = columns.reduce((acc, column) => [...acc, ...column.items], []);
         const newItemId = (allItems.length > 0 ? Math.max(...allItems.map(item => parseInt(item.id))) : 0) + 1;
-        const newItem = { id: newItemId.toString(), content: `Nova tarefa ${newItemId}` }
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${day}/${month}/${year}`;
+        const newItem = { id: newItemId.toString(), title: `Nova tarefa ${newItemId}`, content: `Descrição da tarefa`, deadline: formattedDate }
 
         columns[index].items.push(newItem)
 
@@ -134,23 +139,20 @@ function Home() {
         setNewText(event.target.value)
     }
 
-    const saveNewNameItem = (columnId, itemId) => {
+    const saveNewNameItem = (columnId, itemId, newAttributes) => {
         const updatedColumn = columns.map((column) => {
             if (column.id === columnId) {
                 const editItem = column.items.find(item => item.id === itemId)
                 if (editItem) {
-                    if(!newText){
-                        editItem.content = editItem.content
-                    } else {
-                        editItem.content = newText
-                    }
+                    editItem.title = newAttributes.title || editItem.title
+                    editItem.content = newAttributes.content || editItem.content
+                    editItem.deadline = newAttributes.deadline || editItem.deadline
                 }
             }
             return column
         })
 
         setColumns(updatedColumn)
-        setNewText()
         handleShowDiv(itemId)
     }
 
