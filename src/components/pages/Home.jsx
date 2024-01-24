@@ -175,7 +175,7 @@ function Home() {
 
     return (
         <div className=' bg-[#fafafa] h-screen font-inter'>
-            <Header username={username} key={userId} />
+            <Header username={username} key={userId} userId={userId} />
             <div className='flex gap-5 flex-wrap flex-col items-center lg:flex-row lg:items-start px-10 py-6'>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {columns.map((column, index) => (
