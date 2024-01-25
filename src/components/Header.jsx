@@ -5,6 +5,7 @@ import Logo from "../assets/Logo.png"
 import SignoutButton from "./SignoutButton"
 import Button from "./Button"
 import ImageDefault from "../assets/Avatar_default.jpg"
+import SwitchMode from "./SwichMode"
 import PocketBase from 'pocketbase';
 import { useEffect } from "react"
 
@@ -50,30 +51,31 @@ const Header = ({ username, userId }) => {
     };
 
     return (
-        <div className="w-full bg-primary-300 h-20 flex items-center py-3 px-10 justify-between">
+        <div className="w-full bg-primary-300 dark:bg-[#161616] dark:border-b-2 h-20 flex items-center py-3 px-10 justify-between">
             <div className="hidden md:block">
                 <Image src={Logo} alt="Imagem da logo To-do" w="230px" />
             </div>
             <div className="md:hidden">
                 <Image src={Logo} alt="Imagem da logo To-do" w="150px" />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 flex items-center gap-5">
+                <SwitchMode/>
                 {!isVisible && (
-                    <>
+                    <div>
                         <button className="text-white text-xl font-bold hidden md:block" onClick={() => setIsVisible(true)}>{username}</button>
                         <button className="flex flex-col gap-1 md:hidden" onClick={() => setIsVisible(true)} >
                             <div className="w-6 h-1 bg-white"></div>
                             <div className="w-6 h-1 bg-white"></div>
                             <div className="w-6 h-1 bg-white"></div>
                         </button>
-                    </>
+                    </div>
                 )}
 
                 {isVisible && (
-                    <ul className="bg-white w-full md:w-1/3 pb-10 absolute md:top-1 md:right-1 top-0 right-0 duration-150 flex flex-col space-y-3 justify-end items-center rounded border-black shadow-lg z-10">
+                    <ul className="bg-white dark:bg-[#2f2f2f] w-full md:w-1/3 pb-10 absolute md:top-1 md:right-1 top-0 right-0 duration-150 flex flex-col space-y-3 justify-end items-center rounded border-black shadow-lg z-10">
                         <button className="px-10 py-8 relative ml-auto" onClick={() => setIsVisible(false)}>
-                            <div className="w-6 h-1 rotate-45 absolute bg-black"></div>
-                            <div className="w-6 h-1 -rotate-45 absolute bg-black"></div>
+                            <div className="w-6 h-1 rotate-45 absolute bg-black dark:bg-white"></div>
+                            <div className="w-6 h-1 -rotate-45 absolute bg-black dark:bg-white"></div>
                         </button>
                         <div className="w-full relative flex items-center justify-center flex-col">
                             {!editMode && (
@@ -87,15 +89,16 @@ const Header = ({ username, userId }) => {
                             {editMode && (
                                 <div className="flex flex-col items-center justify-center border-slate-600 border p-2 rounded gap-5">
                                     <button className="ml-auto px-10 py-4" onClick={() => setEditMode(false)}>
-                                        <div className="w-6 h-1 rotate-45 absolute bg-black"></div>
-                                        <div className="w-6 h-1 -rotate-45 absolute bg-black"></div>
+                                        <div className="w-6 h-1 rotate-45 absolute bg-black dark:bg-white"></div>
+                                        <div className="w-6 h-1 -rotate-45 absolute bg-black dark:bg-white"></div>
                                     </button>
-                                    <input type="file" name="fileinput" id="fileinput" onChange={handleFileChange} />
+                                    <label htmlFor="fileinput" className="text-white font-bold bg-primary-300 p-3 rounded">Enviar arquivo</label>
+                                    <input type="file" name="fileinput" id="fileinput" onChange={handleFileChange} className="hidden"/>
                                     <Button text="Salvar" h="42px" onClick={() => {handleUpload(); setEditMode(false); imageurl()}} />
                                 </div>
                             )}
                         </div>
-                        <li className="text-black text-lg font-bold">{username}</li>
+                        <li className="text-black dark:text-white text-lg font-bold">{username}</li>
                         <SignoutButton />
                         <Delete />
                     </ul>

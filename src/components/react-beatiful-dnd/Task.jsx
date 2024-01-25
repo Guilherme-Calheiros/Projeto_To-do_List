@@ -36,13 +36,13 @@ const Task = ({ item, editStates, handleShowDiv, saveNewNameItem, removeItem, co
     return (
         <Draggable draggableId={item.id} index={index} key={item.id}>
             {(provided) => (
-                <div className="bg-white" onDoubleClick={() => handleShowDiv(item.id)}>
+                <div className="bg-white dark:bg-[#2F2F2F]" onDoubleClick={() => handleShowDiv(item.id)}>
                     <div {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef} className="h-auto flex flex-col gap-2 p-4 break-words" style={{ ...provided.draggableProps.style }}>
                         {!editStates[item.id] && (
-                            <div className="relative p-3">
+                            <div className="relative p-3 dark:text-white">
                                 <h3 className="font-bold">{item.title}</h3>
                                 <p className="select-none">{item.content}</p>
-                                <p className="bg-gray-200 text-center block absolute rounded-lg px-1 -right-3 -bottom-5">{item.deadline}</p>
+                                <p className="text-center block absolute rounded-lg px-1 -right-3 -bottom-5">{item.deadline}</p>
                             </div>
                         )}
                         <div className="flex gap-1 text-sm justify-center items-center">

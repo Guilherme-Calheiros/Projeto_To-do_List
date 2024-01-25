@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
+body{
+    background-color: #fafafa
+}
+.dark{
+    background-color: #1E1E1E
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

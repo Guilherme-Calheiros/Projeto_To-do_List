@@ -11,7 +11,7 @@ const Column = ({ column, editStates, handleShowDiv, handleText, saveNewNameColu
                 {(provided) => (
                     <>
                         {!editStates[column.id] && (
-                            <div className="bg-white px-3 py-2 rounded-md mb-4 shadow-md border-t-4 border-primary-200 flex justify-between sm:w-80 w-64">
+                            <div className="bg-white dark:bg-[#242424] px-3 py-2 rounded-md mb-4 shadow-md border-t-4 border-primary-200 flex justify-between sm:w-80 w-64">
                                 <h2 className="text-primary-300 cursor-pointer select-none font-bold text-xl" onDoubleClick={() => handleShowDiv(column.id)}>{column.name}</h2>
                                 <button className="flex items-center" onClick={() => removeColumn(column.id)}>
                                     <svg className="hover:fill-gray-500 fill-gray-300" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,7 +21,7 @@ const Column = ({ column, editStates, handleShowDiv, handleText, saveNewNameColu
                             </div>
                         )}
                         {editStates[column.id] && (
-                            <div className="flex flex-col h-full w-full gap-3 p-3 bg-white mb-4 shadow-lg">
+                            <div className="flex flex-col h-full w-full gap-3 p-3 bg-white dark:bg-[#242424] mb-4 shadow-lg">
                                 <div className="flex justify-between mb-5">
                                     <Input type="text" onChange={handleText} placeholder={column.name} />
                                     <button onClick={() => handleShowDiv(column.id)}>
@@ -35,7 +35,7 @@ const Column = ({ column, editStates, handleShowDiv, handleText, saveNewNameColu
                                 </div>
                             </div>
                         )}
-                        <div className="bg-primary-100 sm:w-80 h-fit rounded flex flex-col p-3 w-64 shadow-md">
+                        <div className="bg-primary-100 dark:bg-[#161616] sm:w-80 h-fit rounded flex flex-col p-3 w-64 shadow-md">
                             <div ref={provided.innerRef} className="flex flex-col p-4 gap-4">
                                 {column.items.map((item, index) => (
                                     <Task key={item.id} item={item} editStates={editStates} handleShowDiv={handleShowDiv} handleText={handleText} saveNewNameItem={saveNewNameItem} removeItem={removeItem} columnId={column.id} index={index} />

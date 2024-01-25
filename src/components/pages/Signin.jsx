@@ -36,7 +36,7 @@ const Login = () => {
 
     return (
         <div className="flex">
-            <div className="hidden lg:flex lg:flex-col justify-center items-center p-4 w-2/4">
+            <div className="hidden dark:bg-[#1e1e1e] lg:flex lg:flex-col justify-center items-center p-4 w-2/4">
                 <div className="hidden sm:block">
                     <Image src={LogoDesktop} alt="Logo"/>
                 </div>
