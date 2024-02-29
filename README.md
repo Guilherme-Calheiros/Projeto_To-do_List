@@ -30,6 +30,6 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 ## 💻 Projeto
 
-O DevLinks é um agregador de links para usar como cartão de visitas online.
+O Todo-List é um projeto para a organização de tarefas com uso de um sistema de login para validar o usuário
 
 - [Acesse o projeto finalizado, online](https://to-do-list-smoky-nu.vercel.app)
